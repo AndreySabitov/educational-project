@@ -6,6 +6,7 @@ public class Main {
         int n = 20;
         Random random = new Random();
         int[] numbers = new int[n];
+        int target = 50;
 
         for (int i = 0; i < n; i++) {
             numbers[i] = random.nextInt(-100, 100);
@@ -14,7 +15,7 @@ public class Main {
         System.out.println(Arrays.toString(numbers));
 
         System.out.printf("Максимальный элемент = %d%n", findMaxElement(numbers));
-        System.out.printf("Индекс элемента со значением %d = %d%n", 50, findElementIndex(numbers, 50));
+        System.out.printf("Индекс элемента со значением %d = %d%n", target, findElementIndex(numbers, target));
     }
 
     public static int findMaxElement(int[] numbers) {
