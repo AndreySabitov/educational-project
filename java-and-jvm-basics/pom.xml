@@ -5,8 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.sabitov-project</groupId>
-    <artifactId>refactoring-the-calculator-into-methods</artifactId>
+    <artifactId>java-and-jvm-basics</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>introduction-to-the-oop</module>
+        <module>console-calculator-development</module>
+        <module>basic-syntax-and-data-types</module>
+        <module>arrays-sort</module>
+        <module>refactoring-the-calculator-into-methods</module>
+        <module>set-work-environment</module>
+        <module>text-analyzer</module>
+        <module>tic-tac-toe</module>
+        <module>working-with-arrays-search</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
