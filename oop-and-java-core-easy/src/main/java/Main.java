@@ -1,6 +1,9 @@
 import model.Person;
 import model.Student;
 import model.Teacher;
+import shapes.Circle;
+import shapes.Rectangle;
+import shapes.Shape;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +21,8 @@ public class Main {
         testWorkWithArrayListAndComparator();
 
         testInheritanceAndPolymorphism();
+
+        testInterfacesAndAbstractClasses();
     }
 
     public static void testTaskEncapsulationAndValidation() {
@@ -98,11 +103,24 @@ public class Main {
         Student student = new Student();
         Teacher teacher = new Teacher();
 
-        Person[] persons = new Person[] {person, student, teacher};
+        Person[] persons = new Person[]{person, student, teacher};
 
-        for (Person p: persons) {
+        for (Person p : persons) {
             System.out.println(p.introduce());
         }
         System.out.println();
+    }
+
+    public static void testInterfacesAndAbstractClasses() {
+        Shape circle = new Circle(1);
+        Shape rectangle = new Rectangle(5, 5);
+
+        List<Shape> shapes = List.of(circle, rectangle);
+
+        double areasSum = shapes.stream()
+                .mapToDouble(Shape::getArea)
+                .sum();
+
+        System.out.printf("Сумма площадей = %s%n", areasSum);
     }
 }
