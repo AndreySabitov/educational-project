@@ -1,4 +1,6 @@
+import model.Person;
 import model.Student;
+import model.Teacher;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +16,8 @@ public class Main {
         testEqualsAndHashCode();
 
         testWorkWithArrayListAndComparator();
+
+        testInheritanceAndPolymorphism();
     }
 
     public static void testTaskEncapsulationAndValidation() {
@@ -86,6 +90,19 @@ public class Main {
         Collections.sort(students, studentComparator);
 
         System.out.println(students);
+        System.out.println();
+    }
+
+    public static void testInheritanceAndPolymorphism() {
+        Person person = new Person();
+        Student student = new Student();
+        Teacher teacher = new Teacher();
+
+        Person[] persons = new Person[] {person, student, teacher};
+
+        for (Person p: persons) {
+            System.out.println(p.introduce());
+        }
         System.out.println();
     }
 }
