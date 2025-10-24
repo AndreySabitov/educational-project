@@ -26,6 +26,8 @@ public class Main {
         testInterfacesAndAbstractClasses();
 
         testHashMap();
+
+        testStreamApi();
     }
 
     public static void testTaskEncapsulationAndValidation() {
@@ -171,4 +173,21 @@ public class Main {
         }
         System.out.println("-".repeat(100));
     }
+
+    public static void testStreamApi() {
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("Andrey", 21, 6));
+        students.add(new Student("Andy", 18, 7));
+        students.add(new Student("Alena", 22, 8));
+        students.add(new Student("Vasya", 20, 7));
+
+        double average = students.stream()
+                .filter(student -> student.getName().startsWith("A") && student.getAge() > 20)
+                .mapToInt(Student::getAverageGrade)
+                .average().orElse(-1.0);
+
+        System.out.printf("Средний балл всех студентов старше 20 лет с именами, которые начинаются на A = %s%n", average);
+        System.out.println("-".repeat(100));
+    }
+
 }
