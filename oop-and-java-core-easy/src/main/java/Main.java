@@ -1,3 +1,4 @@
+import exceptions.StudentNotFoundException;
 import manager.StudentManager;
 import model.Person;
 import model.Student;
@@ -33,6 +34,8 @@ public class Main {
         testStreamApi();
 
         testExceptionHandling();
+
+        testCreateCustomException();
     }
 
     public static void testTaskEncapsulationAndValidation() {
@@ -210,6 +213,17 @@ public class Main {
             } catch (IOException e) {
                 System.out.println("Поймали IOException");
             }
+        }
+        System.out.println("-".repeat(100));
+    }
+
+    public static void testCreateCustomException() {
+        StudentManager manager = new StudentManager();
+
+        try {
+            manager.findById("id1");
+        } catch (StudentNotFoundException e) {
+            System.out.println("Поймали StudentNotFoundException");
         }
     }
 }

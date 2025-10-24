@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.StudentNotFoundException;
 import model.Student;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class StudentManager {
         }
 
         if (!students.containsKey(studentId)) {
-            throw new RuntimeException("Студент с id = %s не найден".formatted(studentId));
+            throw new StudentNotFoundException("Студент с id = %s не найден".formatted(studentId));
         }
 
         return students.get(studentId);
