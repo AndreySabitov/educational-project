@@ -5,6 +5,25 @@ public class Student {
     private int age;
     private int averageGrade;
 
+    public Student() {
+    }
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public Student(String name, int age, int averageGrade) {
+        this.name = name;
+        this.age = age;
+        if (averageGrade >= 0 && averageGrade <= 10) {
+            this.averageGrade = averageGrade;
+        } else {
+            throw new IllegalArgumentException("Некорректное значение среднего балла");
+        }
+    }
+
+
     public String getName() {
         return name;
     }
