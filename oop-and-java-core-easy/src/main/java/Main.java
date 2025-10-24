@@ -6,6 +6,9 @@ import shapes.Circle;
 import shapes.Rectangle;
 import shapes.Shape;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,6 +31,8 @@ public class Main {
         testHashMap();
 
         testStreamApi();
+
+        testExceptionHandling();
     }
 
     public static void testTaskEncapsulationAndValidation() {
@@ -190,4 +195,21 @@ public class Main {
         System.out.println("-".repeat(100));
     }
 
+    public static void testExceptionHandling() {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("input.txt"));
+            reader.readLine();
+        } catch (IOException e) {
+            System.out.println("Поймали FileNotFoundException или IOException");
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                System.out.println("Поймали IOException");
+            }
+        }
+    }
 }
