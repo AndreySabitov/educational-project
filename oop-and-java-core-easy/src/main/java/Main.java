@@ -1,3 +1,4 @@
+import manager.StudentManager;
 import model.Person;
 import model.Student;
 import model.Teacher;
@@ -23,6 +24,8 @@ public class Main {
         testInheritanceAndPolymorphism();
 
         testInterfacesAndAbstractClasses();
+
+        testHashMap();
     }
 
     public static void testTaskEncapsulationAndValidation() {
@@ -39,7 +42,7 @@ public class Main {
         } catch (IllegalArgumentException e) {
             System.out.println("Выброшено исключение при значении для averageGrade больше 10");
         }
-        System.out.println();
+        System.out.println("-".repeat(100));
     }
 
     public static void testTaskOverloadingConstructors() {
@@ -66,7 +69,7 @@ public class Main {
         } else {
             System.out.printf("Ошибка: %s не должен быть эквивалентен %s%n", student1, student2);
         }
-        System.out.println();
+        System.out.println("-".repeat(100));
     }
 
     public static void testWorkWithArrayListAndComparator() {
@@ -95,7 +98,7 @@ public class Main {
         Collections.sort(students, studentComparator);
 
         System.out.println(students);
-        System.out.println();
+        System.out.println("-".repeat(100));
     }
 
     public static void testInheritanceAndPolymorphism() {
@@ -108,7 +111,7 @@ public class Main {
         for (Person p : persons) {
             System.out.println(p.introduce());
         }
-        System.out.println();
+        System.out.println("-".repeat(100));
     }
 
     public static void testInterfacesAndAbstractClasses() {
@@ -122,5 +125,50 @@ public class Main {
                 .sum();
 
         System.out.printf("Сумма площадей = %s%n", areasSum);
+        System.out.println("-".repeat(100));
+    }
+
+    public static void testHashMap() {
+        StudentManager manager = new StudentManager();
+        Student student1 = new Student("Andy", 19, "id1", 8);
+        Student student2 = new Student("Andy", 19, "id2", 8);
+        Student student3 = new Student("Andy", 19, "id3", 8);
+        Student student4 = new Student("Andy", 19, "id4", 8);
+        Student student5 = new Student("Andy", 19, "id5", 8);
+        Student student6 = new Student("Andy", 19, "id6", 8);
+
+        manager.add(student1);
+        manager.add(student2);
+        manager.add(student3);
+        manager.add(student4);
+        manager.add(student5);
+        manager.add(student6);
+
+        List<Student> students = manager.findAll();
+        long time1 = System.nanoTime();
+        for (Student student : students) {
+            if (student.getStudentId().equals("id5")) {
+                break;
+            }
+        }
+        long time2 = System.nanoTime();
+        Student findedStudent = manager.findById("id5");
+        long time3 = System.nanoTime();
+        long arrayListTime = time2 - time1;
+        long hashMapTime = time3 - time2;
+        System.out.printf("Время поиска в List = %dнс%n", arrayListTime);
+        System.out.printf("Время поиска в HashMap = %dнс%n", hashMapTime);
+        System.out.printf("Время поиска в HashMap меньше, чем в ArrayList - %s%n", hashMapTime < arrayListTime);
+
+        System.out.printf("Нашли нужного студента: %s%n", student1.equals(findedStudent));
+
+        manager.deleteById("id1");
+
+        try {
+            manager.findById("id1");
+        } catch (RuntimeException e) {
+            System.out.println("Студент с id = id1 успешно удален");
+        }
+        System.out.println("-".repeat(100));
     }
 }

@@ -1,6 +1,7 @@
 package model;
 
 public class Student extends Person {
+    private String studentId;
     private int averageGrade;
 
     public Student() {
@@ -17,6 +18,12 @@ public class Student extends Person {
         } else {
             throw new IllegalArgumentException("Некорректное значение среднего балла");
         }
+    }
+
+    public Student(String name, int age, String studentId, int averageGrade) {
+        super(name, age);
+        this.studentId = studentId;
+        this.averageGrade = averageGrade;
     }
 
     @Override
@@ -44,5 +51,9 @@ public class Student extends Person {
                 ", age=" + age +
                 ", averageGrade=" + averageGrade +
                 "}";
+    }
+
+    public String getStudentId() {
+        return studentId;
     }
 }
