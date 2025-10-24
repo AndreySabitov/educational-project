@@ -1,5 +1,10 @@
 import model.Student;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
         testTaskEncapsulationAndValidation();
@@ -7,6 +12,8 @@ public class Main {
         testTaskOverloadingConstructors();
 
         testEqualsAndHashCode();
+
+        testWorkWithArrayListAndComparator();
     }
 
     public static void testTaskEncapsulationAndValidation() {
@@ -23,6 +30,7 @@ public class Main {
         } catch (IllegalArgumentException e) {
             System.out.println("Выброшено исключение при значении для averageGrade больше 10");
         }
+        System.out.println();
     }
 
     public static void testTaskOverloadingConstructors() {
@@ -49,5 +57,35 @@ public class Main {
         } else {
             System.out.printf("Ошибка: %s не должен быть эквивалентен %s%n", student1, student2);
         }
+        System.out.println();
+    }
+
+    public static void testWorkWithArrayListAndComparator() {
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("Andrey", 17, 5));
+        students.add(new Student("Andrey", 18, 7));
+        students.add(new Student("Petya", 19, 8));
+        students.add(new Student("Vasya", 20, 7));
+        students.add(new Student("Oleg", 21, 8));
+        students.add(new Student("Masha", 18, 6));
+        students.add(new Student("Boris", 19, 10));
+        students.add(new Student("Boris", 19, 9));
+
+        Comparator<Student> studentComparator = new Comparator<>() {
+            @Override
+            public int compare(Student o1, Student o2) {
+                int compareByNameResult = String.CASE_INSENSITIVE_ORDER.compare(o1.getName(), o2.getName());
+                if (compareByNameResult != 0) {
+                    return compareByNameResult;
+                } else {
+                    return Integer.compare(o1.getAverageGrade(), o2.getAverageGrade()) * -1;
+                }
+            }
+        };
+
+        Collections.sort(students, studentComparator);
+
+        System.out.println(students);
+        System.out.println();
     }
 }
