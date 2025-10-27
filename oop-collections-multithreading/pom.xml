@@ -13,6 +13,7 @@
         <module>object-contract</module>
         <module>polymorphism-in-action</module>
         <module>data-manipulation</module>
+        <module>dynamic-sorting</module>
     </modules>
 
     <properties>
