@@ -14,6 +14,7 @@
         <module>polymorphism-in-action</module>
         <module>data-manipulation</module>
         <module>dynamic-sorting</module>
+        <module>multithreading-basics-thread-and-runnable</module>
     </modules>
 
     <properties>
