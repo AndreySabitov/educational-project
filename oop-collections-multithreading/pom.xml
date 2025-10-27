@@ -15,6 +15,7 @@
         <module>data-manipulation</module>
         <module>dynamic-sorting</module>
         <module>multithreading-basics</module>
+        <module>asynchronous-programming</module>
     </modules>
 
     <properties>
