@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>multithreading-basics-thread-and-runnable</artifactId>
+    <artifactId>multithreading-basics</artifactId>
 
 
 </project>
