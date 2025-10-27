@@ -11,6 +11,7 @@
     <modules>
         <module>designing-reliable-class</module>
         <module>object-contract</module>
+        <module>polymorphism-in-action</module>
     </modules>
 
     <properties>
