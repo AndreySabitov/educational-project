@@ -6,7 +6,6 @@ public class BankAccount {
         validateOwnerName(ownerName);
 
         this.ownerName = ownerName;
-        this.balance = 0.0;
     }
 
 
