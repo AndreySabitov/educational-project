@@ -19,6 +19,10 @@ public class Main {
     }
 
     public static String getDomain(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Не задан email");
+        }
+
         int index = email.indexOf("@");
 
         if (index == -1) {
