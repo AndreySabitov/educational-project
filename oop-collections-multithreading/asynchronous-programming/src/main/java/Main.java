@@ -1,6 +1,10 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.DashboardDto;
+import model.Student;
 
+import java.time.Duration;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
@@ -11,6 +15,8 @@ public class Main {
         testCompletableFuture(mapper);
 
         testExceptionally(mapper);
+
+        testThenCombine();
     }
 
     public static void testCompletableFuture(ObjectMapper mapper) {
@@ -30,6 +36,8 @@ public class Main {
                     }
                 }).thenAccept(student -> System.out.printf("Получили объект класса Student: %s%n", student))
                 .join();
+
+        System.out.println("-".repeat(50));
     }
 
     public static void testExceptionally(ObjectMapper mapper) {
@@ -58,34 +66,32 @@ public class Main {
                     }
                 }).thenAccept(student -> System.out.printf("Получили объект класса Student: %s%n", student))
                 .join();
+
+        System.out.println("-".repeat(50));
+    }
+
+    public static void testThenCombine() {
+        CompletableFuture<String> futureProfile = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(2000);
+                return "Profile";
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        CompletableFuture<List<String>> futureOrders = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(3000);
+                return List.of("order1", "order2");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        long time1 = System.nanoTime();
+        DashboardDto dto = futureProfile.thenCombine(futureOrders, DashboardDto::new).join();
+        long time2 = System.nanoTime();
+        System.out.printf("Получили результат %s за время %s%n", dto, Duration.ofNanos(time2 - time1).toMillis());
     }
 }
 
-class Student {
-    private String name;
-    private int age;
-
-    public Student() {
-    }
-
-    public Student(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                '}';
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-}
