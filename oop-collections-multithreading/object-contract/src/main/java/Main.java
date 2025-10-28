@@ -16,10 +16,14 @@ public class Main {
 
         Set<Currency> currencies = new HashSet<>();
         currencies.add(currency1);
+
+        System.out.printf("Объект currency1 добавлен. Размер currencies = %d%n", currencies.size());
+
         if (!currencies.add(currency2)) {
-            System.out.println("Объект currency2 не добавлен, так как эквивалентен currency1");
+            System.out.println("Объект currency2 не добавлен");
         }
 
-        System.out.printf("set содержит объект currency1 = %s\n", currencies.contains(currency1));
+        System.out.printf("set содержит объект currency1 = %s%n", currencies.contains(currency1));
+        System.out.printf("set содержит объект currency2 = %s%n", currencies.contains(currency2));
     }
 }
