@@ -1,12 +1,13 @@
 import model.Product;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        List<Product> products = new java.util.ArrayList<>(List.of(
+        List<Product> products = new ArrayList<>(List.of(
                 new Product("product2", 200, 3),
                 new Product("product3", 100, 1),
                 new Product("product1", 300, 7)
