@@ -1,3 +1,5 @@
+package ru.sabitov;
+
 import com.google.common.base.Strings;
 
 public class Main {
