@@ -1,3 +1,6 @@
 spring:
   application:
     name: intro-to-spring-framework
+
+app:
+  greeting: Hello from properties!
