@@ -1,0 +1,13 @@
+package ru.sabitov.intro_to_spring_framework.controller;
+
+import org.springframework.web.bind.annotation.RestController;
+import ru.sabitov.intro_to_spring_framework.service.MessageService;
+
+@RestController
+public class MessageController {
+    private final MessageService messageService;
+
+    public MessageController(MessageService messageService) {
+        this.messageService = messageService;
+    }
+}
