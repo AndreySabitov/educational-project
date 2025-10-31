@@ -5,3 +5,7 @@ spring:
 app:
   greeting: Hello from properties!
   repositoryMessage: Hello from repository!
+
+feature:
+  toggle:
+    enable: true
