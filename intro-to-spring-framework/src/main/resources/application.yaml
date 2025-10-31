@@ -4,3 +4,4 @@ spring:
 
 app:
   greeting: Hello from properties!
+  repositoryMessage: Hello from repository!

@@ -16,4 +16,9 @@ public class MessageController {
     public String getGreeting() {
         return messageService.getMessage();
     }
+
+    @GetMapping("/message")
+    public String getMessage() {
+        return messageService.getMessageFromRepository();
+    }
 }
