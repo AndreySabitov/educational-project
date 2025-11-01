@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sabitov.example.dto.CreateBookDto;
 import ru.sabitov.example.dto.UpdateBookDto;
+import ru.sabitov.example.error.CustomException;
 import ru.sabitov.example.mapper.BookMapper;
 import ru.sabitov.example.model.Book;
 
@@ -21,6 +22,10 @@ public class BookController {
     @GetMapping("/books/{id}")
     public Book findById(@PathVariable Long id) {
         log.info("Поступил запрос на поиск книги с id = {}", id);
+
+        if (id == 0) {
+            throw new CustomException("Книга не найдена");
+        }
 
         return new Book(id, "Book", "Author");
     }
