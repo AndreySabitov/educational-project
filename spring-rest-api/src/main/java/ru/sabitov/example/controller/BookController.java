@@ -2,6 +2,8 @@ package ru.sabitov.example.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.sabitov.example.dto.CreateBookDto;
+import ru.sabitov.example.mapper.BookMapper;
 import ru.sabitov.example.model.Book;
 
 @RestController
@@ -28,9 +30,9 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public Book create(@RequestBody Book book) {
-        log.info("Запрос на добавление книги {}", book);
+    public Book create(@RequestBody CreateBookDto bookDto) {
+        log.info("Запрос на добавление книги {}", bookDto);
 
-        return book;
+        return BookMapper.mapToBook(bookDto);
     }
 }
