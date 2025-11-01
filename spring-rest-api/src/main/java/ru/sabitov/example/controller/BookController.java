@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sabitov.example.dto.CreateBookDto;
+import ru.sabitov.example.dto.UpdateBookDto;
 import ru.sabitov.example.mapper.BookMapper;
 import ru.sabitov.example.model.Book;
 
@@ -36,5 +37,12 @@ public class BookController {
         log.info("Запрос на добавление книги {}", bookDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BookMapper.mapToBook(bookDto));
+    }
+
+    @PutMapping("/books/{id}")
+    public ResponseEntity<Book> update(@RequestBody UpdateBookDto updateDto, @PathVariable Long id) {
+        log.info("Запрос на обновление книги с id = {}", id);
+
+        return ResponseEntity.ok(new Book(id, updateDto.getTitle(), updateDto.getAuthor()));
     }
 }
