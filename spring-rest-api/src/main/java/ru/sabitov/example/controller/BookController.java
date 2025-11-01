@@ -3,6 +3,7 @@ package ru.sabitov.example.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.sabitov.example.model.Book;
 
@@ -20,5 +21,12 @@ public class BookController {
         log.info("Поступил запрос на поиск книги с id = {}", id);
 
         return new Book(id,"Book", "Author");
+    }
+
+    @GetMapping("/books/search")
+    public Book findByTitle(@RequestParam(required = false) String title) {
+        log.info("Запрос на поиск книги по title = {}", title);
+
+        return new Book(1L, title, "Tolstoy L.N.");
     }
 }
