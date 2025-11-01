@@ -1,6 +1,8 @@
 package ru.sabitov.example.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sabitov.example.dto.CreateBookDto;
 import ru.sabitov.example.mapper.BookMapper;
@@ -30,9 +32,9 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public Book create(@RequestBody CreateBookDto bookDto) {
+    public ResponseEntity<Book> create(@RequestBody CreateBookDto bookDto) {
         log.info("Запрос на добавление книги {}", bookDto);
 
-        return BookMapper.mapToBook(bookDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(BookMapper.mapToBook(bookDto));
     }
 }
