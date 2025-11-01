@@ -45,4 +45,11 @@ public class BookController {
 
         return ResponseEntity.ok(new Book(id, updateDto.getTitle(), updateDto.getAuthor()));
     }
+
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        log.info("Запрос на удаление книги с id = {}", id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
