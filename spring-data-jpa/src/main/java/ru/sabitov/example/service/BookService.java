@@ -7,6 +7,8 @@ import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
 import ru.sabitov.example.error.NotFoundException;
 import ru.sabitov.example.mapper.BookMapper;
+import ru.sabitov.example.model.Author;
+import ru.sabitov.example.repository.AuthorRepository;
 import ru.sabitov.example.repository.BookRepository;
 
 import java.util.List;
@@ -16,10 +18,15 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class BookService {
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
 
     @Transactional
     public BookDto addBook(CreateBookDto dto) {
-        return BookMapper.toDto(bookRepository.save(BookMapper.toEntity(dto)));
+        Author author = authorRepository.findAuthorByName(dto.getAuthor()).orElseThrow(() ->
+                new NotFoundException("Автор не найден"));
+
+
+        return BookMapper.toDto(bookRepository.save(BookMapper.toEntity(dto, author)));
     }
 
     public BookDto findById(Long id) {
@@ -43,7 +50,7 @@ public class BookService {
             throw new IllegalArgumentException("Не указан автор");
         }
 
-        return bookRepository.findBookByAuthor(author).stream()
+        return bookRepository.findBookByAuthor_Name(author).stream()
                 .map(BookMapper::toDto)
                 .toList();
     }
@@ -53,7 +60,7 @@ public class BookService {
             throw new IllegalArgumentException("Не указан автор или название книги");
         }
 
-        return BookMapper.toDto(bookRepository.findBookByTitleAndAuthor(title, author).orElseThrow(() ->
+        return BookMapper.toDto(bookRepository.findBookByTitleAndAuthor_Name(title, author).orElseThrow(() ->
                 new NotFoundException("Не удалось найти книгу %s автора %s".formatted(title, author))));
     }
 }
