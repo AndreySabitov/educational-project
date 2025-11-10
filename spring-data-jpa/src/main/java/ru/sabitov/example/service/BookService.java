@@ -1,6 +1,7 @@
 package ru.sabitov.example.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sabitov.example.dto.BookDto;
@@ -8,11 +9,13 @@ import ru.sabitov.example.dto.CreateBookDto;
 import ru.sabitov.example.error.NotFoundException;
 import ru.sabitov.example.mapper.BookMapper;
 import ru.sabitov.example.model.Author;
+import ru.sabitov.example.model.Book;
 import ru.sabitov.example.repository.AuthorRepository;
 import ru.sabitov.example.repository.BookRepository;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -35,7 +38,11 @@ public class BookService {
     }
 
     public List<BookDto> findAll() {
-        return bookRepository.findAll().stream()
+        List<Book> books = bookRepository.findAll();
+
+        books.forEach(book -> log.info("Книга {}, автор {}", book.getTitle(), book.getAuthor().getName()));
+
+        return books.stream()
                 .map(BookMapper::toDto)
                 .toList();
     }
