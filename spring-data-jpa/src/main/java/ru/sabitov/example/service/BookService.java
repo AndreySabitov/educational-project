@@ -37,4 +37,23 @@ public class BookService {
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }
+
+    public List<BookDto> findByAuthor(String author) {
+        if (author.isBlank()) {
+            throw new IllegalArgumentException("Не указан автор");
+        }
+
+        return bookRepository.findBookByAuthor(author).stream()
+                .map(BookMapper::toDto)
+                .toList();
+    }
+
+    public BookDto findByTitleAndAuthor(String title, String author) {
+        if (author.isBlank() || title.isBlank()) {
+            throw new IllegalArgumentException("Не указан автор или название книги");
+        }
+
+        return BookMapper.toDto(bookRepository.findBookByTitleAndAuthor(title, author).orElseThrow(() ->
+                new NotFoundException("Не удалось найти книгу %s автора %s".formatted(title, author))));
+    }
 }

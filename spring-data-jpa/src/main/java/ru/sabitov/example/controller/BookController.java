@@ -33,8 +33,12 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookDto>> findAll() {
+    public ResponseEntity<List<BookDto>> findAll(@RequestParam(required = false) String author) {
         log.info("Запрос на получение всех книг");
+
+        if (author != null) {
+            return ResponseEntity.ok(bookService.findByAuthor(author));
+        }
 
         return ResponseEntity.ok(bookService.findAll());
     }
@@ -45,5 +49,10 @@ public class BookController {
 
         bookService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/by-title-and-author")
+    public ResponseEntity<BookDto> findByTitleAndAuthor(@RequestParam String title, @RequestParam String author) {
+        return ResponseEntity.ok(bookService.findByTitleAndAuthor(title, author));
     }
 }
