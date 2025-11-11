@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,5 +23,5 @@ public class Author {
     private String name;
 
     @OneToMany(mappedBy = "author")
-    private List<Book> books;
+    private final List<Book> books = new ArrayList<>();
 }
