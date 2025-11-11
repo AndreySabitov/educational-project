@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
+import ru.sabitov.example.error.DuplicateException;
 import ru.sabitov.example.error.NotFoundException;
 import ru.sabitov.example.mapper.BookMapper;
 import ru.sabitov.example.model.Author;
@@ -87,6 +88,9 @@ public class BookService {
 
     @Transactional
     public BookDto createBookWithAuthor(CreateBookDto dto) {
+        if (authorRepository.existsByName(dto.getAuthor())) {
+            throw new DuplicateException("Автор с именем '%s' уже существует".formatted(dto.getAuthor()));
+        }
         Author author = authorRepository.save(new Author(null, dto.getAuthor()));
 
         if (true) {
