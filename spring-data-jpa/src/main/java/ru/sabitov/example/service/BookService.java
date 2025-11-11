@@ -38,7 +38,7 @@ public class BookService {
     }
 
     public List<BookDto> findAll() {
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookRepository.getAll();
 
         books.forEach(book -> log.info("Книга {}, автор {}", book.getTitle(), book.getAuthor().getName()));
 
@@ -69,5 +69,15 @@ public class BookService {
 
         return BookMapper.toDto(bookRepository.findBookByTitleAndAuthor_Name(title, author).orElseThrow(() ->
                 new NotFoundException("Не удалось найти книгу %s автора %s".formatted(title, author))));
+    }
+
+    public List<BookDto> searchByTitle(String text) {
+        if (text.isBlank()) {
+            return List.of();
+        }
+
+        return bookRepository.findByPartOfTitle(text).stream()
+                .map(BookMapper::toDto)
+                .toList();
     }
 }

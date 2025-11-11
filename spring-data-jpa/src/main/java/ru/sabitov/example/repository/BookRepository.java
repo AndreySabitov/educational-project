@@ -10,9 +10,12 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT b from Book b join fetch b.author")
-    List<Book> findAll();
+    List<Book> getAll();
 
     List<Book> findBookByAuthor_Name(String author);
 
     Optional<Book> findBookByTitleAndAuthor_Name(String title, String author);
+
+    @Query("SELECT b from Book b where lower(b.title) like lower(concat('%', :text, '%')) ORDER BY b.publicationYear DESC")
+    List<Book> findByPartOfTitle(String text);
 }

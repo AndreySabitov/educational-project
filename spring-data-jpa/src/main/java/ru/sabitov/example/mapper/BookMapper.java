@@ -10,10 +10,10 @@ import ru.sabitov.example.model.Book;
 public class BookMapper {
 
     public Book toEntity(CreateBookDto dto, Author author) {
-        return new Book(null, dto.getTitle(), author);
+        return new Book(null, dto.getTitle(), author, dto.getPublicationYear());
     }
 
     public BookDto toDto(Book book) {
-        return new BookDto(book.getId(), book.getTitle(), book.getAuthor().getName());
+        return new BookDto(book.getId(), book.getTitle(), book.getAuthor().getName(), book.getPublicationYear());
     }
 }

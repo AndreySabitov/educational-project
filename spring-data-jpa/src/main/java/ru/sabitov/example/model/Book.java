@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Year;
+
 @Getter
 @Setter
 @Entity
@@ -21,4 +23,7 @@ public class Book {
 
     @ManyToOne
     private Author author;
+
+    @Column(name = "publication_year")
+    private Year publicationYear;
 }
