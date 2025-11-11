@@ -60,4 +60,9 @@ public class BookController {
     public ResponseEntity<List<BookDto>> searchByTitle(@RequestParam String text) {
         return ResponseEntity.ok(bookService.searchByTitle(text));
     }
+
+    @PostMapping("/create-with-author")
+    public ResponseEntity<BookDto> createWithAuthor(@RequestBody CreateBookDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBookWithAuthor(dto));
+    }
 }

@@ -13,6 +13,7 @@ import ru.sabitov.example.model.Book;
 import ru.sabitov.example.repository.AuthorRepository;
 import ru.sabitov.example.repository.BookRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -79,5 +80,16 @@ public class BookService {
         return bookRepository.findByPartOfTitle(text).stream()
                 .map(BookMapper::toDto)
                 .toList();
+    }
+
+    @Transactional
+    public BookDto createBookWithAuthor(CreateBookDto dto) {
+        Author author = authorRepository.save(new Author(null, dto.getAuthor(), new ArrayList<>()));
+
+        if (true) {
+            throw new RuntimeException();
+        }
+
+        return BookMapper.toDto(bookRepository.save(BookMapper.toEntity(dto, author)));
     }
 }
