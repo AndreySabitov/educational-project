@@ -34,12 +34,12 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<List<BookDto>> findAll(@RequestParam(required = false) String author) {
-        log.info("Запрос на получение всех книг");
-
         if (author != null) {
+            log.info("Запрос на получение всех книг автора {}", author);
             return ResponseEntity.ok(bookService.findByAuthor(author));
         }
 
+        log.info("Запрос на получение всех книг");
         return ResponseEntity.ok(bookService.findAll());
     }
 
@@ -53,16 +53,22 @@ public class BookController {
 
     @GetMapping("/by-title-and-author")
     public ResponseEntity<BookDto> findByTitleAndAuthor(@RequestParam String title, @RequestParam String author) {
+        log.info("Поступил запрос на поиск книги по автору и названию. Title: {}, Author: {}", title, author);
         return ResponseEntity.ok(bookService.findByTitleAndAuthor(title, author));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<BookDto>> searchByTitle(@RequestParam String text) {
+        log.info("Поступил запрос на поиск книг по названию");
+
         return ResponseEntity.ok(bookService.searchByTitle(text));
     }
 
     @PostMapping("/create-with-author")
     public ResponseEntity<BookDto> createWithAuthor(@RequestBody CreateBookDto dto) {
+        log.info("Поступил запрос на добавление новой книги вместе с новым автором. Book: {}, Author: {}",
+                dto.getTitle(), dto.getAuthor());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBookWithAuthor(dto));
     }
 }

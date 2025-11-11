@@ -50,6 +50,10 @@ public class BookService {
 
     @Transactional
     public void deleteById(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new NotFoundException("Книга с id = %d не найдена".formatted(id));
+        }
+
         bookRepository.deleteById(id);
     }
 
