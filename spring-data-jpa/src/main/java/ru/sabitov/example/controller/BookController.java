@@ -48,12 +48,14 @@ public class BookController {
         log.info("Поступил запрос на удаление книги с id = {}", id);
 
         bookService.deleteById(id);
+
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/by-title-and-author")
     public ResponseEntity<BookDto> findByTitleAndAuthor(@RequestParam String title, @RequestParam String author) {
         log.info("Поступил запрос на поиск книги по автору и названию. Title: {}, Author: {}", title, author);
+
         return ResponseEntity.ok(bookService.findByTitleAndAuthor(title, author));
     }
 

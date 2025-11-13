@@ -1,6 +1,7 @@
 package ru.sabitov.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import ru.sabitov.example.dto.AuthorDto;
 import ru.sabitov.example.dto.CreateAuthorDto;
 import ru.sabitov.example.service.AuthorService;
 
+@Slf4j
 @RestController
 @RequestMapping("/author")
 @RequiredArgsConstructor
@@ -19,6 +21,8 @@ public class AuthorController {
 
     @PostMapping
     public ResponseEntity<AuthorDto> create(@RequestBody CreateAuthorDto dto) {
+        log.info("Запрос на добавление нового автора: {}", dto.getName());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.create(dto));
     }
 
