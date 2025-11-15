@@ -1,9 +1,15 @@
 package ru.sabitov.polyglot_storage.model;
 
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "reviews")
+@Document(collection = "reviews")
+@AllArgsConstructor
+@Getter
 public class ProductReview {
+    @Id
     private String id;
     private Long productId;
     private int rating;
