@@ -10,10 +10,10 @@ import ru.sabitov.polyglot_storage.model.Product;
 public class ProductMapper {
 
     public Product toEntity(CreateProductDto dto, Category category) {
-        return new Product(null, dto.getName(), category);
+        return new Product(null, dto.getName(), dto.getPrice(), category);
     }
 
     public ProductDto toDto(Product product) {
-        return new ProductDto(product.getName(), CategoryMapper.toDto(product.getCategory()));
+        return new ProductDto(product.getName(), product.getPrice(), CategoryMapper.toDto(product.getCategory()));
     }
 }

@@ -9,5 +9,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ProductDto implements Serializable {
     private String name;
+    private double price;
     private CategoryDto category;
 }

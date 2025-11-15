@@ -11,4 +11,6 @@ public interface ProductService {
     List<ProductDto> findByNameAndCategoryId(String searchText, Long categoryId);
 
     ProductDto findProductById(Long id);
+
+    ProductDto updateProduct();
 }
