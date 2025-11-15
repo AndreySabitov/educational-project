@@ -10,6 +10,12 @@ spring:
       ddl-auto: update
 
   data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: mongodb
+      username: mongo_user
+      password: password
     redis:
       host: localhost
       port: 6379
