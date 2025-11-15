@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.sabitov.polyglot_storage.dto.CreateProductDto;
 import ru.sabitov.polyglot_storage.dto.ProductDto;
+import ru.sabitov.polyglot_storage.dto.UpdateProductDto;
 import ru.sabitov.polyglot_storage.service.ProductService;
 
 import java.util.List;
@@ -29,5 +30,15 @@ public class ProductController {
     @GetMapping("/{id}")
     public ProductDto findById(@PathVariable Long id) {
         return productService.findProductById(id);
+    }
+
+    @PatchMapping("/{id}")
+    public ProductDto update(@RequestBody UpdateProductDto dto, @PathVariable Long id) {
+        return productService.update(dto, id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
+        productService.deleteById(id);
     }
 }

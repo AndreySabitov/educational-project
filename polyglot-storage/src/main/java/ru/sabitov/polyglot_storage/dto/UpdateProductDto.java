@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class UpdateProductDto {
     private String name;
-    private double price;
+    private Double price;
 }
