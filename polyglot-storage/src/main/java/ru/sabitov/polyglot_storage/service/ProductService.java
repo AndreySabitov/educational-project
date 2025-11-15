@@ -9,4 +9,6 @@ public interface ProductService {
     ProductDto create(CreateProductDto dto);
 
     List<ProductDto> findByNameAndCategoryId(String searchText, Long categoryId);
+
+    ProductDto findProductById(Long id);
 }

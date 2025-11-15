@@ -25,4 +25,9 @@ public class ProductController {
     public List<ProductDto> findByNameAndCategory(@RequestParam String searchText, @RequestParam Long categoryId) {
         return productService.findByNameAndCategoryId(searchText, categoryId);
     }
+
+    @GetMapping("/{id}")
+    public ProductDto findById(@PathVariable Long id) {
+        return productService.findProductById(id);
+    }
 }

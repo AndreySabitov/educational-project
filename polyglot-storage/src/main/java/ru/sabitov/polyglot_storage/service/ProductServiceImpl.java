@@ -1,6 +1,7 @@
 package ru.sabitov.polyglot_storage.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sabitov.polyglot_storage.dto.CreateProductDto;
@@ -38,5 +39,12 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByNameAndCategory(searchText, categoryId).stream()
                 .map(ProductMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    @Cacheable(value = "products", key = "#id")
+    public ProductDto findProductById(Long id) {
+        return ProductMapper.toDto(productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Продукт с id = %d не найден".formatted(id))));
     }
 }
