@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
     private final ReviewService reviewService;
@@ -51,5 +51,18 @@ public class ProductController {
     @GetMapping("/{productId}/reviews")
     public List<ProductReviewDto> getReviewsByProduct(@PathVariable Long productId) {
         return reviewService.getByProductId(productId);
+    }
+
+    @GetMapping("/{id}/details")
+    public ProductDetailsDto getProductDetails(@PathVariable Long id) {
+        ProductDto productDto = productService.findProductById(id);
+        List<ProductReviewDto> reviews = reviewService.getByProductId(id);
+
+        return ProductDetailsDto.builder()
+                .name(productDto.getName())
+                .price(productDto.getPrice())
+                .category(productDto.getCategory())
+                .reviews(reviews)
+                .build();
     }
 }
