@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: mongodb
+      username: user
+      password: password
+      authentication-database: admin
+    redis:
+      host: localhost
+      port: 6379
+      password: password
+      database: 0
+      timeout: 5000ms
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
