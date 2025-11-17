@@ -6,11 +6,13 @@ import ru.sabitov.example.dto.CreateBookDto;
 import ru.sabitov.example.model.Author;
 import ru.sabitov.example.model.Book;
 
+import java.time.Year;
+
 @UtilityClass
 public class BookMapper {
 
     public Book toEntity(CreateBookDto dto, Author author) {
-        return new Book(null, dto.getTitle(), author, dto.getPublicationYear());
+        return new Book(null, dto.getTitle(), author, Year.of(dto.getPublicationYear()));
     }
 
     public BookDto toDto(Book book) {

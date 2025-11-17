@@ -1,5 +1,6 @@
 package ru.sabitov.example.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<BookDto> create(@RequestBody CreateBookDto bookDto) {
+    public ResponseEntity<BookDto> create(@Valid @RequestBody CreateBookDto bookDto) {
         log.info("Запрос на добавление книги {}", bookDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBook(bookDto));
