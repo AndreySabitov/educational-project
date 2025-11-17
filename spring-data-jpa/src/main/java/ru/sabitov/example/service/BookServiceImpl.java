@@ -2,12 +2,13 @@ package ru.sabitov.example.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
-import ru.sabitov.example.dto.PageableParam;
 import ru.sabitov.example.error.DuplicateException;
 import ru.sabitov.example.error.NotFoundException;
 import ru.sabitov.example.mapper.BookMapper;
@@ -43,10 +44,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookDto> findAll(PageableParam pageableParam) {
-        Pageable pageRequest = getPageable(pageableParam);
-
-        Page<Book> books = bookRepository.getAll(pageRequest);
+    public Page<BookDto> findAll(Pageable pageable) {
+        Page<Book> books = bookRepository.getAll(pageable);
 
         books.forEach(book -> log.info("Книга {}, автор {}", book.getTitle(), book.getAuthor().getName()));
 
@@ -66,14 +65,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookDto> findByAuthor(PageableParam pageableParam, String author) {
+    public Page<BookDto> findByAuthor(Pageable pageable, String author) {
         if (author.isBlank()) {
             throw new IllegalArgumentException("Не указан автор");
         }
 
-        Pageable pageRequest = getPageable(pageableParam);
-
-        Page<Book> books = bookRepository.findBookByAuthor_Name(author, pageRequest);
+        Page<Book> books = bookRepository.findBookByAuthor_Name(author, pageable);
 
         return new PageImpl<>(books.stream()
                 .map(bookMapper::toDto)
@@ -114,20 +111,5 @@ public class BookServiceImpl implements BookService {
         }
 
         return bookMapper.toDto(bookRepository.save(bookMapper.toEntity(dto, author)));
-    }
-
-    private Pageable getPageable(PageableParam pageableParam) {
-        String[] sortParams = pageableParam.getSort().split(",");
-        Sort sort;
-        if (sortParams.length == 1) {
-            sort = Sort.by(sortParams[0]);
-        } else {
-            switch (sortParams[1]) {
-                case "asc" -> sort = Sort.by(Sort.Direction.ASC, sortParams[0]);
-                case "desc" -> sort = Sort.by(Sort.Direction.DESC, sortParams[0]);
-                default -> sort = Sort.unsorted();
-            }
-        }
-        return PageRequest.of(pageableParam.getPage(), pageableParam.getSize(), sort);
     }
 }
