@@ -3,11 +3,13 @@ package ru.sabitov.example.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
+import ru.sabitov.example.dto.PageableParam;
 import ru.sabitov.example.service.BookService;
 
 import java.util.List;
@@ -34,14 +36,17 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookDto>> findAll(@RequestParam(required = false) String author) {
+    public ResponseEntity<Page<BookDto>> findAll(PageableParam pageableParam,
+                                                 @RequestParam(required = false) String author) {
+        log.info("Получили параметры пагинации: {}", pageableParam);
+
         if (author != null) {
             log.info("Запрос на получение всех книг автора {}", author);
-            return ResponseEntity.ok(bookService.findByAuthor(author));
+            return ResponseEntity.ok(bookService.findByAuthor(pageableParam, author));
         }
 
         log.info("Запрос на получение всех книг");
-        return ResponseEntity.ok(bookService.findAll());
+        return ResponseEntity.ok(bookService.findAll(pageableParam));
     }
 
     @DeleteMapping("/{id}")

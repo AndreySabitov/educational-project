@@ -2,10 +2,12 @@ package ru.sabitov.example.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
+import ru.sabitov.example.dto.PageableParam;
 import ru.sabitov.example.error.DuplicateException;
 import ru.sabitov.example.error.NotFoundException;
 import ru.sabitov.example.mapper.BookMapper;
@@ -41,14 +43,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll() {
-        List<Book> books = bookRepository.getAll();
+    public Page<BookDto> findAll(PageableParam pageableParam) {
+        Pageable pageRequest = getPageable(pageableParam);
+
+        Page<Book> books = bookRepository.getAll(pageRequest);
 
         books.forEach(book -> log.info("Книга {}, автор {}", book.getTitle(), book.getAuthor().getName()));
 
-        return books.stream()
+        return new PageImpl<>(books.stream()
                 .map(BookMapper::toDto)
-                .toList();
+                .toList(), books.getPageable(), books.getTotalElements());
     }
 
     @Transactional
@@ -62,14 +66,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findByAuthor(String author) {
+    public Page<BookDto> findByAuthor(PageableParam pageableParam, String author) {
         if (author.isBlank()) {
             throw new IllegalArgumentException("Не указан автор");
         }
 
-        return bookRepository.findBookByAuthor_Name(author).stream()
+        Pageable pageRequest = getPageable(pageableParam);
+
+        Page<Book> books = bookRepository.findBookByAuthor_Name(author, pageRequest);
+
+        return new PageImpl<>(books.stream()
                 .map(BookMapper::toDto)
-                .toList();
+                .toList(), books.getPageable(), books.getTotalElements());
     }
 
     @Override
@@ -106,5 +114,20 @@ public class BookServiceImpl implements BookService {
         }
 
         return BookMapper.toDto(bookRepository.save(BookMapper.toEntity(dto, author)));
+    }
+
+    private Pageable getPageable(PageableParam pageableParam) {
+        String[] sortParams = pageableParam.getSort().split(",");
+        Sort sort;
+        if (sortParams.length == 1) {
+            sort = Sort.by(sortParams[0]);
+        } else {
+            switch (sortParams[1]) {
+                case "asc" -> sort = Sort.by(Sort.Direction.ASC, sortParams[0]);
+                case "desc" -> sort = Sort.by(Sort.Direction.DESC, sortParams[0]);
+                default -> sort = Sort.unsorted();
+            }
+        }
+        return PageRequest.of(pageableParam.getPage(), pageableParam.getSize(), sort);
     }
 }

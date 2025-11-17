@@ -1,5 +1,7 @@
 package ru.sabitov.example.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.sabitov.example.model.Book;
@@ -10,9 +12,9 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT b from Book b join fetch b.author")
-    List<Book> getAll();
+    Page<Book> getAll(Pageable pageable);
 
-    List<Book> findBookByAuthor_Name(String author);
+    Page<Book> findBookByAuthor_Name(String author, Pageable pageable);
 
     Optional<Book> findBookByTitleAndAuthor_Name(String title, String author);
 
