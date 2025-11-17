@@ -25,6 +25,7 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final BookMapper bookMapper;
 
     @Transactional
     @Override
@@ -32,13 +33,12 @@ public class BookServiceImpl implements BookService {
         Author author = authorRepository.findAuthorByName(dto.getAuthor()).orElseThrow(() ->
                 new NotFoundException("Автор не найден"));
 
-
-        return BookMapper.toDto(bookRepository.save(BookMapper.toEntity(dto, author)));
+        return bookMapper.toDto(bookRepository.save(bookMapper.toEntity(dto, author)));
     }
 
     @Override
     public BookDto findById(Long id) {
-        return BookMapper.toDto(bookRepository.findById(id).orElseThrow(() ->
+        return bookMapper.toDto(bookRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Книга с id = %d не найдена".formatted(id))));
     }
 
@@ -51,7 +51,7 @@ public class BookServiceImpl implements BookService {
         books.forEach(book -> log.info("Книга {}, автор {}", book.getTitle(), book.getAuthor().getName()));
 
         return new PageImpl<>(books.stream()
-                .map(BookMapper::toDto)
+                .map(bookMapper::toDto)
                 .toList(), books.getPageable(), books.getTotalElements());
     }
 
@@ -76,7 +76,7 @@ public class BookServiceImpl implements BookService {
         Page<Book> books = bookRepository.findBookByAuthor_Name(author, pageRequest);
 
         return new PageImpl<>(books.stream()
-                .map(BookMapper::toDto)
+                .map(bookMapper::toDto)
                 .toList(), books.getPageable(), books.getTotalElements());
     }
 
@@ -86,7 +86,7 @@ public class BookServiceImpl implements BookService {
             throw new IllegalArgumentException("Не указан автор или название книги");
         }
 
-        return BookMapper.toDto(bookRepository.findBookByTitleAndAuthor_Name(title, author).orElseThrow(() ->
+        return bookMapper.toDto(bookRepository.findBookByTitleAndAuthor_Name(title, author).orElseThrow(() ->
                 new NotFoundException("Не удалось найти книгу %s автора %s".formatted(title, author))));
     }
 
@@ -97,7 +97,7 @@ public class BookServiceImpl implements BookService {
         }
 
         return bookRepository.findByPartOfTitle(text).stream()
-                .map(BookMapper::toDto)
+                .map(bookMapper::toDto)
                 .toList();
     }
 
@@ -113,7 +113,7 @@ public class BookServiceImpl implements BookService {
             throw new RuntimeException();
         }
 
-        return BookMapper.toDto(bookRepository.save(BookMapper.toEntity(dto, author)));
+        return bookMapper.toDto(bookRepository.save(bookMapper.toEntity(dto, author)));
     }
 
     private Pageable getPageable(PageableParam pageableParam) {
