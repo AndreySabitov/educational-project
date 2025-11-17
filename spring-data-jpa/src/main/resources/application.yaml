@@ -1,2 +1,7 @@
 demo:
   url: https://jsonplaceholder.typicode.com/posts/1
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
