@@ -36,7 +36,7 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<BookDto>> findAll(PageableParam pageableParam,
+    public ResponseEntity<Page<BookDto>> findAll(@Valid PageableParam pageableParam,
                                                  @RequestParam(required = false) String author) {
         log.info("Получили параметры пагинации: {}", pageableParam);
 
