@@ -1,7 +1,10 @@
 package ru.sabitov.example.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +22,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<BookDto> create(@RequestBody CreateBookDto bookDto) {
+    public ResponseEntity<BookDto> create(@Valid @RequestBody CreateBookDto bookDto) {
         log.info("Запрос на добавление книги {}", bookDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBook(bookDto));
@@ -33,14 +36,15 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookDto>> findAll(@RequestParam(required = false) String author) {
+    public ResponseEntity<Page<BookDto>> findAll(Pageable pageable,
+                                                 @RequestParam(required = false) String author) {
         if (author != null) {
             log.info("Запрос на получение всех книг автора {}", author);
-            return ResponseEntity.ok(bookService.findByAuthor(author));
+            return ResponseEntity.ok(bookService.findByAuthor(pageable, author));
         }
 
         log.info("Запрос на получение всех книг");
-        return ResponseEntity.ok(bookService.findAll());
+        return ResponseEntity.ok(bookService.findAll(pageable));
     }
 
     @DeleteMapping("/{id}")

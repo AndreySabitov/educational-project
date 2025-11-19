@@ -1,5 +1,7 @@
 package ru.sabitov.example.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
 
@@ -10,11 +12,11 @@ public interface BookService {
 
     BookDto findById(Long id);
 
-    List<BookDto> findAll();
+    Page<BookDto> findAll(Pageable pageable);
 
     void deleteById(Long id);
 
-    List<BookDto> findByAuthor(String author);
+    Page<BookDto> findByAuthor(Pageable pageable, String author);
 
     BookDto findByTitleAndAuthor(String title, String author);
 

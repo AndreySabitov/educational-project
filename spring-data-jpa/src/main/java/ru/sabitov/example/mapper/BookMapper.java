@@ -1,19 +1,20 @@
 package ru.sabitov.example.mapper;
 
-import lombok.experimental.UtilityClass;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
 import ru.sabitov.example.model.Author;
 import ru.sabitov.example.model.Book;
 
-@UtilityClass
-public class BookMapper {
+@Mapper(componentModel = "spring")
+public interface BookMapper {
 
-    public Book toEntity(CreateBookDto dto, Author author) {
-        return new Book(null, dto.getTitle(), author, dto.getPublicationYear());
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "author", source = "author")
+    @Mapping(target = "publicationYear", expression = "java(Year.of(dto.getPublicationYear()))")
+    Book toEntity(CreateBookDto dto, Author author);
 
-    public BookDto toDto(Book book) {
-        return new BookDto(book.getId(), book.getTitle(), book.getAuthor().getName(), book.getPublicationYear());
-    }
+    @Mapping(target = "author", source = "book.author.name")
+    BookDto toDto(Book book);
 }
