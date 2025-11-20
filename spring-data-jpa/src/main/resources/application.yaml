@@ -5,3 +5,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+
+jwt:
+  secret: SGVsbG8gV29ybGQh
+  expiration: 300000
