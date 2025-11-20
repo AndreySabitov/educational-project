@@ -31,6 +31,10 @@ public class JwtTokenProvider {
         return !isExpired(expirationDate);
     }
 
+    public String getUsername(String token) {
+        return getClaims(token).getSubject();
+    }
+
     private boolean isExpired(Date expirationDate) {
         return expirationDate.before(new Date());
     }
