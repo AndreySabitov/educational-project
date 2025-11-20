@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.sabitov.example.model.User;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;
@@ -18,9 +17,9 @@ public class JwtTokenProvider {
     @Value("${jwt.secret-key}")
     private String jwtSecret;
 
-    public String generateToken(User user) {
+    public String generateToken(String username) {
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(username)
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignKey())
                 .compact();
