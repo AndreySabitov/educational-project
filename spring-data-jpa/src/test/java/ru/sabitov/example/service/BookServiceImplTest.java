@@ -20,7 +20,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceImplTest {
@@ -50,5 +50,14 @@ class BookServiceImplTest {
         BookDto dto = bookService.findById(1L);
 
         assertEquals(bookDto, dto);
+    }
+
+    @Test
+    void testCanDeleteById() {
+        when(bookRepository.existsById(1L)).thenReturn(true);
+
+        bookService.deleteById(1L);
+
+        verify(bookRepository, times(1)).deleteById(1L);
     }
 }
