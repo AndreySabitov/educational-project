@@ -11,6 +11,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
 import ru.sabitov.example.jwt.JwtTokenProvider;
@@ -28,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Testcontainers
 class JpaExampleAppTest {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
@@ -41,6 +47,19 @@ class JpaExampleAppTest {
     private int port;
 
     private final BookDto bookDto = new BookDto(1L, "Title", "Author", Year.of(2000));
+
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18")
+            .withDatabaseName("test_postgres")
+            .withUsername("test_postgres")
+            .withPassword("test_password");
+
+    @DynamicPropertySource
+    static void registerPgProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
 
     @Test
     void test() throws JsonProcessingException {
