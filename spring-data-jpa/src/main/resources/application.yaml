@@ -9,3 +9,6 @@ spring:
 jwt:
   secret-key: 3f7a9b2e5c8d1f6g4h0i9j2k5l7m8n1o3p6q9r2s4t7u0v1w5x8y2z
   expiration: 300000
+
+notification-service:
+  url: http://localhost:8081

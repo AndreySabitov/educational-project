@@ -25,6 +25,13 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
+      - NOTIFICATION_SERVICE_URL=http://notification-app:8081
     depends_on:
       db:
         condition: service_healthy
+
+  notification-app:
+    image: notification-app:latest
+    container_name: notification_app_container
+    ports:
+      - "8081:8081"
