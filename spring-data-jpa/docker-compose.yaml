@@ -1,5 +1,5 @@
 services:
-  postgres:
+  db:
     image: postgres:18
     container_name: postgres
     ports:
@@ -8,3 +8,21 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 1s
+      interval: 1s
+      retries: 10
+
+  my-app:
+    image: my-app:latest
+    container_name: my_app_container
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+    depends_on:
+      db:
+        condition: service_healthy
