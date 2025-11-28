@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.sabitov.example.client.NotificationClient;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
 import ru.sabitov.example.error.DuplicateException;
@@ -27,6 +28,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final BookMapper bookMapper;
+    private final NotificationClient notificationClient;
 
     @Transactional
     @Override
@@ -34,7 +36,13 @@ public class BookServiceImpl implements BookService {
         Author author = authorRepository.findAuthorByName(dto.getAuthor()).orElseThrow(() ->
                 new NotFoundException("Автор не найден"));
 
-        return bookMapper.toDto(bookRepository.save(bookMapper.toEntity(dto, author)));
+        BookDto createdBook = bookMapper.toDto(bookRepository.save(bookMapper.toEntity(dto, author)));
+        try {
+            notificationClient.sendNotification();
+        } catch (Exception e) {
+            log.warn("Не удалось отправить запрос в notification-service: {}", e.getMessage());
+        }
+        return createdBook;
     }
 
     @Override
