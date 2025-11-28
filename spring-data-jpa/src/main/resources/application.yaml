@@ -2,6 +2,8 @@ demo:
   url: https://jsonplaceholder.typicode.com/posts/1
 
 spring:
+  application:
+    name: book-service
   jpa:
     hibernate:
       ddl-auto: none
