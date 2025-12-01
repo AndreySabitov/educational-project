@@ -1,0 +1,30 @@
+services:
+  eureka-1:
+    build: /discovery-server/
+    container_name: eureka-server-1
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-2:8762/eureka/
+      - SERVER_PORT=8761
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://eureka:8761/actuator/health || exit 1
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+  eureka-2:
+    build: /discovery-server/
+    container_name: eureka-server-2
+    ports:
+      - "8762:8762"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/
+      - SERVER_PORT=8762
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://eureka:8761/actuator/health || exit 1
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5

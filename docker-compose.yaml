@@ -26,29 +26,12 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
     depends_on:
       db:
-        condition: service_healthy
-      eureka:
         condition: service_healthy
 
   notification-app:
     build: /notification-service/
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
-    depends_on:
-      eureka:
-        condition: service_healthy
-
-  eureka:
-    build: /discovery-server/
-    container_name: eureka-server-container
-    ports:
-      - "8761:8761"
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://eureka:8761/actuator/health || exit 1
-      interval: 30s
-      timeout: 5s
-      start_period: 30s
-      retries: 5
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
