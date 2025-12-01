@@ -26,7 +26,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
-      - NOTIFICATION_SERVICE_URL=http://notification-app:8081
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
     depends_on:
       db:
@@ -36,9 +35,6 @@ services:
 
   notification-app:
     build: /notification-service/
-    container_name: notification_app_container
-    ports:
-      - "8081:8081"
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
     depends_on:
