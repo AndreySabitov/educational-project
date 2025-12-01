@@ -1,22 +1,29 @@
 package ru.sabitov.example.client;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+
+import java.net.URI;
 
 @Component
 public class NotificationClient {
     private final RestClient restClient;
+    private final DiscoveryClient discoveryClient;
 
-    public NotificationClient(@Value("${notification-service.url}") String url) {
-        this.restClient = RestClient.builder()
-                .baseUrl(url)
-                .build();
+    private static final String NOTIFICATION_SERVICE_ID = "NOTIFICATION-SERVICE";
+
+    public NotificationClient(EurekaDiscoveryClient discoveryClient) {
+        this.restClient = RestClient.builder().build();
+        this.discoveryClient = discoveryClient;
     }
 
     public void sendNotification() {
+        URI notificationUri = discoveryClient.getInstances(NOTIFICATION_SERVICE_ID).getFirst().getUri();
+
         restClient.post()
-                .uri("/notify")
+                .uri(notificationUri + "/notify")
                 .retrieve()
                 .toEntity(Void.class);
     }
