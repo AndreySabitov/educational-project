@@ -6,17 +6,17 @@ import org.springframework.web.client.RestClient;
 
 @Component
 public class NotificationClient {
-    private final RestClient restClient;
+    private final RestClient rest;
+    @Value("${notification-service.url}")
+    private String notificationServiceUrl;
 
-    public NotificationClient(@Value("${notification-service.url}") String url) {
-        this.restClient = RestClient.builder()
-                .baseUrl(url)
-                .build();
+    public NotificationClient(RestClient.Builder builder) {
+        this.rest = builder.build();
     }
 
     public void sendNotification() {
-        restClient.post()
-                .uri("/notify")
+        rest.post()
+                .uri(notificationServiceUrl + "/notify")
                 .retrieve()
                 .toEntity(Void.class);
     }

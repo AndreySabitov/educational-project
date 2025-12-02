@@ -8,16 +8,17 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
     volumes:
       - ./pgdata:/var/lib/postgresql/
-    healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-      timeout: 1s
-      interval: 1s
-      retries: 10
 
   my-app:
-    image: my-app:latest
+    build: /spring-data-jpa/
     container_name: my_app_container
     ports:
       - "8080:8080"
@@ -25,13 +26,12 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
-      - NOTIFICATION_SERVICE_URL=http://notification-app:8081
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
     depends_on:
       db:
         condition: service_healthy
 
   notification-app:
-    image: notification-app:latest
-    container_name: notification_app_container
-    ports:
-      - "8081:8081"
+    build: /notification-service/
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
