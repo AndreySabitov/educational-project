@@ -2,12 +2,24 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: gateway-server
   cloud:
     gateway:
       server:
         webflux:
+          discovery:
+            locator:
+              enabled: true
           routes:
             - id: book_service_route
-              uri: http://localhost:8081
+              uri: lb://BOOK-SERVICE
               predicates:
                 - Path=/books/**, /api/auth/**, /author/**
+
+eureka:
+  instance:
+    instance-id: "${spring.application.name}:${server.port}"
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

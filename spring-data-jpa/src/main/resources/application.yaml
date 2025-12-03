@@ -19,6 +19,9 @@ notification-service:
   url: http://NOTIFICATION-SERVICE
 
 eureka:
+  instance:
+    hostname: localhost
+    instance-id: "${spring.application.name}:${server.port}"
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
