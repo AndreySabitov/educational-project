@@ -1,2 +1,13 @@
 server:
   port: 8080
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: book_service_route
+              uri: http://localhost:8081
+              predicates:
+                - Path=/books/**, /api/auth/**, /author/**
