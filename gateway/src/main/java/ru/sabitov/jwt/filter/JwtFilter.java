@@ -3,15 +3,18 @@ package ru.sabitov.jwt.filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 import ru.sabitov.jwt.provider.JwtTokenProvider;
+import ru.sabitov.jwt.provider.UserInfo;
 
 @Component
 public class JwtFilter implements WebFilter {
@@ -28,10 +31,9 @@ public class JwtFilter implements WebFilter {
     @NonNull
     public Mono<Void> filter(@NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
         var request = exchange.getRequest();
-        String path = request.getPath().toString();
 
-        if (path.startsWith("/api/auth") && request.getMethod().equals(HttpMethod.POST)) {
-            log.info("Запросы к ручкам аутентификации");
+        String path = request.getPath().toString();
+        if (path.startsWith("/api/auth")) {
             return chain.filter(exchange);
         }
 
@@ -48,7 +50,12 @@ public class JwtFilter implements WebFilter {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return Mono.empty();
         }
-
-        return chain.filter(exchange);
+        log.info("Прошли валидацию токена");
+        UserInfo userInfo = jwtTokenProvider.getUserDetails(jwt);
+        log.info("userInfo = {}", userInfo);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userInfo.username(), null,
+                userInfo.roles());
+        var context = ReactiveSecurityContextHolder.withAuthentication(authentication);
+        return chain.filter(exchange).contextWrite(context);
     }
 }
