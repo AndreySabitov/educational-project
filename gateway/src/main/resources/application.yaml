@@ -1,0 +1,61 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+          routes:
+            - id: book_service_route
+              uri: lb://BOOK-SERVICE
+              predicates:
+                - Path=/library/v1/books/**
+              filters:
+                - RewritePath=/library/v1/books/?(?<segment>.*), /books$\{segment}
+            - id: auth_route
+              uri: lb://BOOK-SERVICE
+              predicates:
+                - Path=/api/auth
+            - id: author_route
+              uri: lb://BOOK-SERVICE
+              predicates:
+                - Path=/author/**
+            - id: login_request_rate_limiter
+              uri: lb://BOOK-SERVICE
+              predicates:
+                - Path=/api/auth/login
+              filters:
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter:
+                      replenishRate: 5
+                      burstCapacity: 300
+                      requestedTokens: 60
+                      key-resolver: "#{@customKeyResolver}"
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: password
+      database: 0
+      timeout: 5000ms
+
+eureka:
+  instance:
+    instance-id: "${spring.application.name}:${server.port}"
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+jwt:
+  secret-key: 3f7a9b2e5c8d1f6g4h0i9j2k5l7m8n1o3p6q9r2s4t7u0v1w5x8y2z
+
+logging:
+  level:
+    org.springframework.security: DEBUG

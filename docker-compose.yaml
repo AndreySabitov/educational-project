@@ -17,16 +17,15 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/
 
-  my-app:
+  book-service:
     build: /spring-data-jpa/
-    container_name: my_app_container
-    ports:
-      - "8080:8080"
+    container_name: book_service_container
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
+      - SERVER_PORT=8081
     depends_on:
       db:
         condition: service_healthy
@@ -35,3 +34,30 @@ services:
     build: /notification-service/
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
+
+  gateway:
+    build: /gateway/
+    container_name: gateway-server
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
+      - SPRING_DATA_REDIS_HOST=redis
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    container_name: redis_container
+    environment:
+      REDIS_PASSWORD: password
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    ports:
+      - "6379:6379"
