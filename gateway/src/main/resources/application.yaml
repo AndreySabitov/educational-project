@@ -15,7 +15,17 @@ spring:
             - id: book_service_route
               uri: lb://BOOK-SERVICE
               predicates:
-                - Path=/books/**, /api/auth/**, /author/**
+                - Path=/library/v1/books/**
+              filters:
+                - RewritePath=/library/v1/books/?(?<segment>.*), /books$\{segment}
+            - id: auth_route
+              uri: lb://BOOK-SERVICE
+              predicates:
+                - Path=/api/auth/**
+            - id: author_route
+              uri: lb://BOOK-SERVICE
+              predicates:
+                - Path=/author/**
 
 eureka:
   instance:
