@@ -3,6 +3,7 @@ package ru.sabitov.example.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,7 @@ public class AuthService {
 
     public TokenResponse login(LoginRequest request) {
         var token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
-        authenticationManager.authenticate(token);
-        return new TokenResponse(tokenProvider.generateToken(request.getUsername()));
+        Authentication authentication = authenticationManager.authenticate(token);
+        return new TokenResponse(tokenProvider.generateToken(request.getUsername(), authentication.getAuthorities()));
     }
 }

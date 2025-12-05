@@ -18,7 +18,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
-import ru.sabitov.example.jwt.JwtTokenProvider;
 import ru.sabitov.example.model.Author;
 import ru.sabitov.example.model.Role;
 import ru.sabitov.example.model.User;
@@ -35,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Testcontainers
 class JpaExampleAppTest {
-    private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
     private final AuthorRepository authorRepository;
 
@@ -70,8 +68,6 @@ class JpaExampleAppTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        String token = jwtTokenProvider.generateToken("Test");
-        headers.set("Authorization", "Bearer " + token);
 
         String body = objectMapper
                 .writeValueAsString(new CreateBookDto("Title", "Author", 2000));
