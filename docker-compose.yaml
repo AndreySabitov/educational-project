@@ -42,3 +42,22 @@ services:
       - "8080:8080"
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
+      - SPRING_DATA_REDIS_HOST=redis
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    container_name: redis_container
+    environment:
+      REDIS_PASSWORD: password
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    ports:
+      - "6379:6379"
