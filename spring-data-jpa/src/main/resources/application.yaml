@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 demo:
   url: https://jsonplaceholder.typicode.com/posts/1
 
@@ -16,6 +19,8 @@ notification-service:
   url: http://NOTIFICATION-SERVICE
 
 eureka:
+  instance:
+    instance-id: "${spring.application.name}:${server.port}"
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
