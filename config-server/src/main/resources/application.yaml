@@ -18,3 +18,10 @@ spring:
       kafka:
         binder:
           brokers: localhost:9092
+
+eureka:
+  instance:
+    instance-id: "${spring.application.name}:${server.port}"
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

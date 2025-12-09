@@ -77,6 +77,7 @@ services:
       - "8888:8888"
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:8888/actuator/health || exit 1
       interval: 30s
