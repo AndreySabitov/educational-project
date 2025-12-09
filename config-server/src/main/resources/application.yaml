@@ -11,3 +11,10 @@ spring:
           uri: https://github.com/AndreySabitov/educational-project-config
           default-label: main
           search-paths: /{application}
+    bus:
+      enabled: true
+      id: config-server
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
