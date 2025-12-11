@@ -2,6 +2,7 @@ package ru.sabitov.example.client;
 
 import feign.FeignException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ public interface NotificationFeignClient {
     @PostMapping("/notify")
     @CircuitBreaker(name = "notificationService", fallbackMethod = "createNotificationFallback")
     @Retry(name = "notificationService")
+    @RateLimiter(name = "notificationService")
     ResponseEntity<Void> createNotification() throws FeignException;
 
     @PostMapping("/notify")
