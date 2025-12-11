@@ -26,14 +26,20 @@ services:
       - SPRING_DATASOURCE_PASSWORD=password
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
       - SERVER_PORT=8081
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
     depends_on:
       db:
+        condition: service_healthy
+      config-server:
         condition: service_healthy
 
   notification-app:
     build: /notification-service/
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
+    depends_on:
+      config-server:
+        condition: service_healthy
 
   gateway:
     build: /gateway/
@@ -61,3 +67,42 @@ services:
       retries: 5
     ports:
       - "6379:6379"
+
+  config-server:
+    build: /config-server/
+    container_name: config-server-container
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8888/actuator/health || exit 1
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  kafka:
+    image: confluentinc/confluent-local
+    hostname: kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"   # Для подключения с хоста (IDE, утилиты)
+      - "29092:29092" # Для контейнеров в Docker-сети
+    restart: unless-stopped
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092"
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:29093"
+      KAFKA_LISTENERS: "PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092"
+    healthcheck:
+      test: kafka-topics --bootstrap-server localhost:9092 --list
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5

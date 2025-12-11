@@ -1,0 +1,27 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/AndreySabitov/educational-project-config
+          default-label: main
+          search-paths: /{application}
+    bus:
+      enabled: true
+      id: config-server
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+
+eureka:
+  instance:
+    instance-id: "${spring.application.name}:${server.port}"
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

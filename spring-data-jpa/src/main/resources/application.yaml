@@ -1,22 +1,15 @@
-server:
-  port: 8081
-
-demo:
-  url: https://jsonplaceholder.typicode.com/posts/1
-
 spring:
   application:
     name: book-service
-  jpa:
-    hibernate:
-      ddl-auto: none
 
-jwt:
-  secret-key: 3f7a9b2e5c8d1f6g4h0i9j2k5l7m8n1o3p6q9r2s4t7u0v1w5x8y2z
-  expiration: 300000
+  config:
+    import: "configserver:"
 
-notification-service:
-  url: http://NOTIFICATION-SERVICE
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
 
 eureka:
   instance:
