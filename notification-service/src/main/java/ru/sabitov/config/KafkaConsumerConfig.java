@@ -2,6 +2,7 @@ package ru.sabitov.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -17,11 +18,13 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConsumerConfig {
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
     @Bean
     public ConsumerFactory<String, BookCreatedEvent> bookEventConsumerFactory() {
         Map<String, Object> config = new HashMap<>();
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "notification_group");
 
         return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(),
