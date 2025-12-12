@@ -1,6 +1,5 @@
 package ru.sabitov.example.service;
 
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,11 +37,9 @@ public class BookServiceImpl implements BookService {
                 new NotFoundException("Автор не найден"));
 
         BookDto createdBook = bookMapper.toDto(bookRepository.save(bookMapper.toEntity(dto, author)));
-        try {
-            notificationClient.createNotification();
-        } catch (FeignException e) {
-            log.warn("Не удалось отправить запрос в notification-service: {}", e.getMessage());
-        }
+
+        notificationClient.createNotification();
+
         return createdBook;
     }
 
