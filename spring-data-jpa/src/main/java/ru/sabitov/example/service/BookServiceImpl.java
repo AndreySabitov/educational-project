@@ -5,9 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.sabitov.example.client.NotificationFeignClient;
+import ru.sabitov.example.dto.BookCreatedEvent;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
 import ru.sabitov.example.error.DuplicateException;
@@ -18,6 +19,7 @@ import ru.sabitov.example.model.Book;
 import ru.sabitov.example.repository.AuthorRepository;
 import ru.sabitov.example.repository.BookRepository;
 
+import java.time.Instant;
 import java.util.List;
 
 @Slf4j
@@ -28,7 +30,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final BookMapper bookMapper;
-    private final NotificationFeignClient notificationClient;
+    private final KafkaTemplate<String, BookCreatedEvent> kafkaTemplate;
 
     @Transactional
     @Override
@@ -38,7 +40,7 @@ public class BookServiceImpl implements BookService {
 
         BookDto createdBook = bookMapper.toDto(bookRepository.save(bookMapper.toEntity(dto, author)));
 
-        notificationClient.createNotification();
+        kafkaTemplate.send("book_events", new BookCreatedEvent(dto.getTitle(), dto.getAuthor(), Instant.now()));
 
         return createdBook;
     }
