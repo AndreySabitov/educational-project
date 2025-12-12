@@ -9,7 +9,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import ru.sabitov.dto.BookCreatedEvent;
+import ru.sabitov.example.dto.BookCreatedEvent;
 
 import java.util.HashMap;
 import java.util.Map;

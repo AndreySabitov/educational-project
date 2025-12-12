@@ -1,4 +1,4 @@
-package ru.sabitov.dto;
+package ru.sabitov.example.dto;
 
 import java.time.Instant;
 
