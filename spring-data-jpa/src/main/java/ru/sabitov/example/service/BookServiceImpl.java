@@ -1,23 +1,30 @@
 package ru.sabitov.example.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.sabitov.example.client.NotificationFeignClient;
+import ru.sabitov.example.dto.BookCreatedEvent;
 import ru.sabitov.example.dto.BookDto;
 import ru.sabitov.example.dto.CreateBookDto;
+import ru.sabitov.example.error.BookEventSerializationException;
 import ru.sabitov.example.error.DuplicateException;
 import ru.sabitov.example.error.NotFoundException;
 import ru.sabitov.example.mapper.BookMapper;
 import ru.sabitov.example.model.Author;
 import ru.sabitov.example.model.Book;
+import ru.sabitov.example.model.OutboxEvent;
 import ru.sabitov.example.repository.AuthorRepository;
 import ru.sabitov.example.repository.BookRepository;
+import ru.sabitov.example.repository.OutboxEventRepository;
 
+import java.time.Instant;
 import java.util.List;
 
 @Slf4j
@@ -28,7 +35,8 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final BookMapper bookMapper;
-    private final NotificationFeignClient notificationClient;
+    private final OutboxEventRepository outboxEventRepository;
+    private final ObjectMapper objectMapper;
 
     @Transactional
     @Override
@@ -38,12 +46,19 @@ public class BookServiceImpl implements BookService {
 
         BookDto createdBook = bookMapper.toDto(bookRepository.save(bookMapper.toEntity(dto, author)));
 
-        notificationClient.createNotification();
+        try {
+            String payload = objectMapper.writeValueAsString(new BookCreatedEvent(dto.getTitle(), dto.getAuthor(),
+                    Instant.now()));
+            outboxEventRepository.save(new OutboxEvent(null, payload, false, Instant.now()));
+        } catch (JsonProcessingException e) {
+            throw new BookEventSerializationException("Ошибка сериализации BookCreatedEvent");
+        }
 
         return createdBook;
     }
 
     @Override
+    @Cacheable(value = "books", key = "#id")
     public BookDto findById(Long id) {
         return bookMapper.toDto(bookRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Книга с id = %d не найдена".formatted(id))));

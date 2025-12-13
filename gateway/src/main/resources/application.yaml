@@ -17,7 +17,7 @@ spring:
               predicates:
                 - Path=/library/v1/books/**
               filters:
-                - RewritePath=/library/v1/books/?(?<segment>.*), /books$\{segment}
+                - RewritePath=/library/v1/books?(?<segment>.*), /books$\{segment}
             - id: auth_route
               uri: lb://BOOK-SERVICE
               predicates:

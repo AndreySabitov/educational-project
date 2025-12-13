@@ -27,6 +27,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
       - SERVER_PORT=8081
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_DATA_REDIS_HOST=redis
     depends_on:
       db:
         condition: service_healthy
@@ -37,8 +38,12 @@ services:
     build: /notification-service/
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_DATA_MONGODB_HOST=mongo
     depends_on:
       config-server:
+        condition: service_healthy
+      mongo:
         condition: service_healthy
 
   gateway:
@@ -105,4 +110,20 @@ services:
       interval: 10s
       timeout: 5s
       start_period: 30s
+      retries: 5
+
+  mongo:
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: mongodb
+    healthcheck:
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongosh admin -u $$MONGO_INITDB_ROOT_USERNAME -p $$MONGO_INITDB_ROOT_PASSWORD --quiet | grep 1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
       retries: 5
