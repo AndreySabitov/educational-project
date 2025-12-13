@@ -27,6 +27,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/
       - SERVER_PORT=8081
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_DATA_REDIS_HOST=redis
     depends_on:
       db:
         condition: service_healthy
