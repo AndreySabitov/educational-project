@@ -1,5 +1,6 @@
 package ru.sabitov.example.dto;
 
+import java.io.Serializable;
 import java.time.Year;
 
 public record BookDto(
@@ -7,5 +8,5 @@ public record BookDto(
         String title,
         String author,
         Year publicationYear
-) {
+) implements Serializable {
 }
