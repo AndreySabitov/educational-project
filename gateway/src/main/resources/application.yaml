@@ -22,6 +22,10 @@ spring:
                   args:
                     name: bookCircuitBreaker
                     fallbackUri: forward:/bookServiceFallback
+                - name: Retry
+                  args:
+                    retries: 3
+                    methods: POST,PUT,DELETE
             - id: auth_route
               uri: lb://BOOK-SERVICE
               predicates:
