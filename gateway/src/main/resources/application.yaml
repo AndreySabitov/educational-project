@@ -12,20 +12,6 @@ spring:
             locator:
               enabled: true
           routes:
-            - id: book_service_route
-              uri: lb://BOOK-SERVICE
-              predicates:
-                - Path=/library/v1/books/**
-              filters:
-                - RewritePath=/library/v1/books?(?<segment>.*), /books$\{segment}
-                - name: CircuitBreaker
-                  args:
-                    name: bookCircuitBreaker
-                    fallbackUri: forward:/bookServiceFallback
-                - name: Retry
-                  args:
-                    retries: 3
-                    methods: POST,PUT,DELETE
             - id: auth_route
               uri: lb://BOOK-SERVICE
               predicates:

@@ -1,4 +1,4 @@
-package ru.sabitov.jwt.filter;
+package ru.sabitov.filters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
