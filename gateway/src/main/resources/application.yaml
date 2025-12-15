@@ -18,6 +18,10 @@ spring:
                 - Path=/library/v1/books/**
               filters:
                 - RewritePath=/library/v1/books?(?<segment>.*), /books$\{segment}
+                - name: CircuitBreaker
+                  args:
+                    name: bookCircuitBreaker
+                    fallbackUri: forward:/bookServiceFallback
             - id: auth_route
               uri: lb://BOOK-SERVICE
               predicates:
@@ -59,3 +63,15 @@ jwt:
 logging:
   level:
     org.springframework.security: DEBUG
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      bookCircuitBreaker:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
