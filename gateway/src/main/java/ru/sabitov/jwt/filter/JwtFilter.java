@@ -33,7 +33,7 @@ public class JwtFilter implements WebFilter {
         var request = exchange.getRequest();
 
         String path = request.getPath().toString();
-        if (path.startsWith("/api/auth")) {
+        if (path.startsWith("/api/auth") || path.startsWith("/actuator")) {
             return chain.filter(exchange);
         }
 

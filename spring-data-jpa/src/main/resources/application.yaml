@@ -13,6 +13,8 @@ spring:
 
 eureka:
   instance:
+    metadataMap:
+      "prometheus.scrape": "true"
     instance-id: "${spring.application.name}:${server.port}"
   client:
     serviceUrl:

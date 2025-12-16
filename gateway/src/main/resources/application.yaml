@@ -42,6 +42,8 @@ spring:
 
 eureka:
   instance:
+    metadataMap:
+      "prometheus.scrape": "true"
     instance-id: "${spring.application.name}:${server.port}"
   client:
     service-url:
@@ -65,3 +67,19 @@ resilience4j:
         slidingWindowType: COUNT_BASED
         minimumNumberOfCalls: 5
         automaticTransitionFromOpenToHalfOpenEnabled: true
+
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  tracing:
+    sampling:
+      probability: 1.0
