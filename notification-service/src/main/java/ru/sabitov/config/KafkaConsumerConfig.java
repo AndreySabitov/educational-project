@@ -49,6 +49,7 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, BookCreatedEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(bookEventConsumerFactory());
         factory.setCommonErrorHandler(errorHandler);
+        factory.getContainerProperties().setObservationEnabled(true);
         return factory;
     }
 }
