@@ -31,7 +31,9 @@ public class NotificationKafkaTemplateConfig {
 
     @Bean
     public KafkaTemplate<String, BookCreatedEvent> notificationKafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+        KafkaTemplate<String, BookCreatedEvent> notificationKafkaTemplate = new KafkaTemplate<>(producerFactory());
+        notificationKafkaTemplate.setObservationEnabled(true);
+        return notificationKafkaTemplate;
     }
 
 }
