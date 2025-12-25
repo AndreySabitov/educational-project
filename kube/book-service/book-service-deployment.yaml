@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: book-service
+  name: book-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-service
+  template:
+    metadata:
+      labels:
+        app: book-service
+    spec:
+      containers:
+        - env:
+            - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
+              value: http://zipkin:9411/api/v2/spans
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: book-service-secret
+                  key: db-password
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://book-db-svc:5432/postgres
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATA_REDIS_URL
+              value: redis://redis:6379
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: kafka:29092
+          image: book-service:1.0
+          name: book-service-container
+          volumeMounts:
+            - mountPath: /config
+              name: book-service-config
+          ports:
+            - containerPort: 8081
+      volumes:
+        - name: book-service-config
+          configMap:
+            name: book-service-config
+      restartPolicy: Always
