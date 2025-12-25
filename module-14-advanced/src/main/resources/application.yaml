@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: book-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/book-db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
