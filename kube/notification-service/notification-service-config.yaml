@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-service-config
+  labels:
+    app: notification-service
+data:
+  application.yaml: |
+    spring:
+      application:
+        name: notification-service
+
+      config:
+        import: "configserver:"
+
+      cloud:
+        config:
+          discovery:
+            enabled: true
+            service-id: config-server
+
+    eureka:
+      instance:
+        metadataMap:
+          "prometheus.scrape": "true"
+        prefer-ip-address: true
+      client:
+        serviceUrl:
+          defaultZone: http://eureka:8761/eureka/

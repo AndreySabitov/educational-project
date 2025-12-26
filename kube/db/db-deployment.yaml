@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: book-database
+  name: book-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: book-database
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: postgres-password
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres:18
+          name: postgres
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: postgresql-persistent-storage
+      restartPolicy: Always
+      volumes:
+        - name: postgresql-persistent-storage
+          persistentVolumeClaim:
+            claimName: book-db-pvc
