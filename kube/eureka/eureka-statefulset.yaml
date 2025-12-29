@@ -1,11 +1,12 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: eureka
   labels:
     app: eureka
 spec:
-  replicas: 1
+  serviceName: eureka
+  replicas: 2
   selector:
     matchLabels:
       app: eureka
@@ -17,8 +18,14 @@ spec:
       containers:
         - name: eureka
           image: eureka:1.0
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8761
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           volumeMounts:
             - name: eureka-config
               mountPath: /config

@@ -8,6 +8,8 @@ spec:
   ports:
     - port: 8761
       targetPort: 8761
+      name: "http"
+      protocol: TCP
   selector:
     app: eureka
-  type: NodePort
+  clusterIP: None
