@@ -17,14 +17,21 @@ spec:
       containers:
         - env:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: http://eureka:8761/eureka/
+              value: http://eureka-0.eureka:8761/eureka/,http://eureka-1.eureka:8761/eureka/
             - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
               value: http://zipkin:9411/api/v2/spans
             - name: SPRING_DATA_REDIS_URL
               value: redis://redis:6379
           image: gateway:1.0
           name: gateway-server
+          volumeMounts:
+            - mountPath: /config
+              name: gateway-config
           ports:
             - containerPort: 8080
               protocol: TCP
       restartPolicy: Always
+      volumes:
+        - name: gateway-config
+          configMap:
+            name: gateway-config

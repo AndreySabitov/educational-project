@@ -17,9 +17,9 @@ spec:
       containers:
         - env:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: http://eureka:8761/eureka/
+              value: http://eureka-0.eureka:8761/eureka/,http://eureka-1.eureka:8761/eureka/
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-              value: kafka:29092
+              value: my-kafka-broker-0.my-kafka-headless.default.svc.cluster.local:9092
           image: config-server:1.0
           name: config-server-container
           ports:

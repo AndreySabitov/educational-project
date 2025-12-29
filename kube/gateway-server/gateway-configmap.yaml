@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  labels:
+    app: gateway
+data:
+  application.yaml: |
+    eureka:
+      instance:
+        metadataMap:
+          "prometheus.scrape": "true"
+        prefer-ip-address: true
