@@ -30,7 +30,7 @@ spec:
             - name: SPRING_DATA_REDIS_URL
               value: redis://redis:6379
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-              value: kafka:29092
+              value: my-kafka-broker-0.my-kafka-headless.default.svc.cluster.local:9092
           image: book-service:1.0
           name: book-service-container
           volumeMounts:

@@ -28,7 +28,7 @@ spec:
                   name: notification-service-secret
                   key: mongo-password
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-              value: kafka:29092
+              value: my-kafka-broker-0.my-kafka-headless.default.svc.cluster.local:9092
           image: notification-service:1.0
           name: notification-service-container
           volumeMounts:
