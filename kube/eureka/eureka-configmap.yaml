@@ -16,7 +16,7 @@ data:
     eureka:
       instance:
         hostname: ${POD_NAME}.eureka
-        prefer-ip-address: false
+        prefer-ip-address: true
       client:
         register-with-eureka: true
         fetch-registry: true
